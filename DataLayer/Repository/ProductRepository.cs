@@ -33,7 +33,6 @@ namespace DataLayer.Repository
                     var sql = "SELECT * FROM Product WHERE Id = @Id";
                     var result = connection.QueryFirst<Product>(sql, parameters);
                     return result;
-
                 }
                 catch (Exception exc)
                 {
