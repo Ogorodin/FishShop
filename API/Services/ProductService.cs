@@ -1,6 +1,6 @@
 ﻿using DataLayer.Entity;
 using DataLayer.Repository;
-using System;
+using Domain.Exceptions;
 using System.Collections.Generic;
 
 namespace API.Services
@@ -19,9 +19,9 @@ namespace API.Services
             {
                 // IMAGIONARY IMPLEMENTATION THAT CAN CAUSE A PROBLEM...
             }
-            catch (Exception exc)
+            catch (ProductServiceException exc)
             {
-                throw new Exception("Exception caught in API.Services.ProductService.GetProducts", exc);
+                throw new ProductServiceException("Exception caught in API.Services.ProductService.GetProducts", exc);
             }
             return _productRepository.GetProducts();
         }
@@ -32,9 +32,9 @@ namespace API.Services
             {
                 // IMAGIONARY IMPLEMENTATION THAT CAN CAUSE A PROBLEM...
             }
-            catch (Exception exc)
+            catch (ProductServiceException exc)
             {
-                throw new Exception("Exception caught in API.Services.ProductService.GetProductById", exc);
+                throw new ProductServiceException("Exception caught in API.Services.ProductService.GetProductById", exc);
             }
             return _productRepository.GetProductById(id);
         }
@@ -47,9 +47,9 @@ namespace API.Services
                 _productRepository.AddProduct(product);
                 return true;
             }
-            catch (Exception exc)
+            catch (ProductServiceException exc)
             {
-                throw new Exception("Exception caught in API.Services.ProductService.AddProduct", exc);
+                throw new ProductServiceException("Exception caught in API.Services.ProductService.AddProduct", exc);
             }
         }
 
@@ -61,9 +61,9 @@ namespace API.Services
                 _productRepository.UpdateProduct(product);
                 return true;
             }
-            catch (Exception exc)
+            catch (ProductServiceException exc)
             {
-                throw new Exception("Exception caught in API.Services.ProductService.UpdateProduct", exc);
+                throw new ProductServiceException("Exception caught in API.Services.ProductService.UpdateProduct", exc);
             }
         }
         public bool DeleteProductById(int id)
@@ -74,9 +74,9 @@ namespace API.Services
                 _productRepository.DeleteProductById(id);
                 return true;
             }
-            catch (Exception exc)
+            catch (ProductServiceException exc)
             {
-                throw new Exception("Exception caught in API.Services.ProductService.DeleteProduct", exc);
+                throw new ProductServiceException("Exception caught in API.Services.ProductService.DeleteProduct", exc);
             }
         }
     }

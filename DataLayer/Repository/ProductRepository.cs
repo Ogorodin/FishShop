@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using DataLayer.Entity;
+using Domain.Exceptions;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -34,9 +35,9 @@ namespace DataLayer.Repository
                     var result = connection.QueryFirst<Product>(sql, parameters);
                     return result;
                 }
-                catch (Exception exc)
+                catch (DataLayerException exc)
                 {
-                    throw new Exception("Exception thrown in API.DataLayer.ProductRepository.GetProductById", exc);
+                    throw new DataLayerException("Exception thrown in API.DataLayer.ProductRepository.GetProductById", exc);
                 }
             }
         }
@@ -58,9 +59,9 @@ namespace DataLayer.Repository
                     connection.Execute(sql, parameters);
                     return true;
                 }
-                catch (Exception exc)
+                catch (DataLayerException exc)
                 {
-                    throw new Exception("Exception thrown in API.DataLayer.ProductRepository.AddProduct", exc);
+                    throw new DataLayerException("Exception thrown in API.DataLayer.ProductRepository.AddProduct", exc);
                 }
             }
         }
@@ -85,9 +86,9 @@ namespace DataLayer.Repository
 
                     return true;
                 }
-                catch (Exception exc)
+                catch (DataLayerException exc)
                 {
-                    throw new Exception("Exception thrown in API.DataLayer.ProductRepository.UpdateProduct", exc);
+                    throw new DataLayerException("Exception thrown in API.DataLayer.ProductRepository.UpdateProduct", exc);
                 }
             }
         }
@@ -107,9 +108,9 @@ namespace DataLayer.Repository
                     connection.Execute(sql, parameters);
                     return true;
                 }
-                catch (Exception exc)
+                catch (DataLayerException exc)
                 {
-                    throw new Exception("Exception thrown in API.DataLayer.ProductRepository.DeleteProduct", exc);
+                    throw new DataLayerException("Exception thrown in API.DataLayer.ProductRepository.DeleteProduct", exc);
                 }
             }
         }
