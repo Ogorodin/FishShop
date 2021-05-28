@@ -4,7 +4,6 @@ namespace Domain.Exceptions
 {
     public class DataLayerException : Exception
     {
-
         public DataLayerException() { }
 
         public DataLayerException(string message) : base(message) { }
