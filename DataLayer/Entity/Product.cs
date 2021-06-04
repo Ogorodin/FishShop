@@ -4,10 +4,19 @@ namespace DataLayer.Entity
 {
     public class Product
     {
-
         public enum EProductType
         {
-            FW_FISH, SW_FISH, P_FISH, CRAB_FISH, FW_PLANT, P_PLANT, FILTER, CO2, FOOD, TANK
+            // DON'T EVER CHANGE THE NUMERIC VALUES FOR THIS ENUMERATIONs
+            FW_FISH = 1,
+            SW_FISH,
+            P_FISH,
+            CRAB_FISH,
+            FW_PLANT,
+            P_PLANT,
+            FILTER,
+            CO2,
+            FOOD,
+            TANK
         }
 
         public int Id { get; set; }
@@ -30,9 +39,8 @@ namespace DataLayer.Entity
         {
             get
             {
-                return $"{ title } { description } {the_type } ";
+                return $"{ title } { description } {the_type } {Stock}";
             }
         }
-
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DataLayer.Entity;
+using System;
 using System.Collections.Generic;
 
 namespace DataLayer.Repository
@@ -6,9 +7,10 @@ namespace DataLayer.Repository
     public interface IProductRepository
     {
         public IEnumerable<Product> GetProducts();
-        public Product GetProductById(int id);
-        public bool AddProduct(Product product);
-        public bool UpdateProduct(Product product);
+        public IEnumerable<object> GetProductsWithStockData();
+        public object GetProductById(int id);
+        public bool AddProduct(Product product, double price, int qty, DateTime priceDate);
+        public bool UpdateProduct(Product product, double price, int qty, DateTime priceDate);
         public bool DeleteProductById(int id);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DataLayer.Entity;
 using DataLayer.Repository;
 using Domain.Exceptions;
+using System;
 using System.Collections.Generic;
 
 namespace API.Services
@@ -26,7 +27,20 @@ namespace API.Services
             return _productRepository.GetProducts();
         }
 
-        public Product GetProductById(int id)
+        public IEnumerable<object> GetProductsWithStockData()
+        {
+            try
+            {
+                // IMAGIONARY IMPLEMENTATION THAT CAN CAUSE A PROBLEM...
+            }
+            catch (ProductServiceException exc)
+            {
+                throw new ProductServiceException("Exception caught in API.Services.ProductService.GetProducts", exc);
+            }
+            return _productRepository.GetProductsWithStockData();
+        }
+
+        public object GetProductById(int id)
         {
             try
             {
@@ -39,12 +53,12 @@ namespace API.Services
             return _productRepository.GetProductById(id);
         }
 
-        public bool AddProduct(Product product)
+        public bool AddProduct(Product product, double price, int qty, DateTime priceDate)
         {
             try
             {
                 // IMAGIONARY IMPLEMENTATION THAT CAN CAUSE A PROBLEM...
-                _productRepository.AddProduct(product);
+                _productRepository.AddProduct(product, price, qty, priceDate);
                 return true;
             }
             catch (ProductServiceException exc)
@@ -53,12 +67,12 @@ namespace API.Services
             }
         }
 
-        public bool UpdateProduct(Product product)
+        public bool UpdateProduct(Product product, double price, int qty, DateTime priceDate)
         {
             try
             {
                 // IMAGIONARY IMPLEMENTATION THAT CAN CAUSE A PROBLEM...
-                _productRepository.UpdateProduct(product);
+                _productRepository.UpdateProduct(product, price, qty, priceDate);
                 return true;
             }
             catch (ProductServiceException exc)

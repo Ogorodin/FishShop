@@ -4,114 +4,152 @@ using Domain.Exceptions;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 
 namespace DataLayer.Repository
 {
     public class ProductRepository : IProductRepository
     {
-        private string _connectionSting = "server=localhost;port=3306;database=the_fish_shop_db;uid=root;password=admin;";
+        private readonly string _connectionString = "server=localhost;port=3306;database=the_fish_shop_db;uid=root;password=admin;";
 
         public IEnumerable<Product> GetProducts()
         {
-            using (MySqlConnection connection = new MySqlConnection(_connectionSting))
+            try
             {
-                connection.Open();
-                var sql = "SELECT * FROM product";
-                return connection.Query<Product>(sql);
-            }
-        }
-        public Product GetProductById(int id)
-        {
-            using (MySqlConnection connection = new MySqlConnection(_connectionSting))
-            {
-                try
+                using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
                     connection.Open();
+                    var sql = "SELECT * FROM product";
+                    return connection.Query<Product>(sql);
+                }
+            }
+            catch (Exception exc)
+            {
+                return null;
+                // throw new DataLayerException("DataLayerException caught in DataLayer.Repository.ProductRepository", exc);
+            }
+        }
+
+        public IEnumerable<object> GetProductsWithStockData()
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    var procedure = "get_products_with_stock_data";
+                    return connection.Query<object>(procedure, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception exc)
+            {
+                return null;
+                //   throw new DataLayerException("DataLayerException caught in DataLayer.Repository.ProductRepository", exc);
+            }
+        }
+
+        public object GetProductById(int id)
+        {
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    var procedure = "get_single_product_with_stock_data_by_id";
                     var parameters = new
                     {
                         Id = id
                     };
-                    var sql = "SELECT * FROM Product WHERE Id = @Id";
-                    var result = connection.QueryFirst<Product>(sql, parameters);
+
+                    var result = connection.QueryFirstOrDefault<Product>(procedure, parameters, commandType: CommandType.StoredProcedure);
                     return result;
                 }
-                catch (DataLayerException exc)
-                {
-                    throw new DataLayerException("Exception thrown in API.DataLayer.ProductRepository.GetProductById", exc);
-                }
+            }
+            catch (Exception exc)
+            {
+                throw new DataLayerException("DataLayerException caught in DataLayer.Repository.ProductRepository", exc);
             }
         }
 
-        public bool AddProduct(Product product)
+        public bool AddProduct(Product product, double price, int quantity, DateTime priceDate)
         {
-            using (MySqlConnection connection = new MySqlConnection(_connectionSting))
+            try
             {
-                try
+                using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
+
                     connection.Open();
+                    var procedure = "insert_product_with_stock_data";
                     var parameters = new
                     {
-                        Title = product.title,
-                        Description = product.description,
-                        Type = product.the_type
+                        product.title,
+                        product.description,
+                        productType = product.the_type,
+                        price,
+                        quantity,
+                        price_date = priceDate
                     };
-                    var sql = "INSERT INTO product (title, description, the_type) VALUES (@Title, @Description, @Type)";
-                    connection.Execute(sql, parameters);
+                    connection.Execute(procedure, parameters, commandType: CommandType.StoredProcedure);
                     return true;
                 }
-                catch (DataLayerException exc)
-                {
-                    throw new DataLayerException("Exception thrown in API.DataLayer.ProductRepository.AddProduct", exc);
-                }
+            }
+            catch (Exception exc)
+            {
+                throw new DataLayerException("DataLayerException caught in DataLayer.Repository.ProductRepository", exc);
             }
         }
 
-        public bool UpdateProduct(Product product)
+        public bool UpdateProduct(Product product, double price, int qty, DateTime priceDate)
         {
-            using (MySqlConnection connection = new MySqlConnection(_connectionSting))
+            try
             {
-                try
+                using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
+
                     connection.Open();
                     var parameters = new
                     {
-                        Id = product.Id,
-                        Title = product.title,
-                        Description = product.description,
-                        TheType = product.the_type
+                        product.Id,
+                        product.title,
+                        product.description,
+                        Q_Type = product.the_type
                     };
 
-                    var sql = "UPDATE Product SET Title = @Title, Description = @Description, The_type = @TheType WHERE id = @Id";
-                    connection.Execute(sql, parameters);
+                    var procedure = "update_product";
+                    connection.Execute(procedure, parameters);
 
                     return true;
                 }
-                catch (DataLayerException exc)
-                {
-                    throw new DataLayerException("Exception thrown in API.DataLayer.ProductRepository.UpdateProduct", exc);
-                }
+            }
+            catch (Exception exc)
+            {
+                throw new DataLayerException("DataLayerException caught in DataLayer.Repository.ProductRepository", exc);
             }
         }
 
         public bool DeleteProductById(int id)
         {
-            using (MySqlConnection connection = new MySqlConnection(_connectionSting))
+            try
             {
-                try
+                using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
+
                     connection.Open();
+                    var procedure = "delete_product_with_stock_data_by_id";
                     var parameters = new
                     {
                         Id = id
                     };
-                    var sql = "DELETE FROM Product WHERE Id = @Id";
-                    connection.Execute(sql, parameters);
+
+                    connection.Execute(procedure, parameters, commandType: CommandType.StoredProcedure);
                     return true;
                 }
-                catch (DataLayerException exc)
-                {
-                    throw new DataLayerException("Exception thrown in API.DataLayer.ProductRepository.DeleteProduct", exc);
-                }
+            }
+            catch (Exception exc)
+            {
+                return false;
+                // throw new DataLayerException("DataLayerException caught in DataLayer.Repository.ProductRepository", exc);
             }
         }
     }
