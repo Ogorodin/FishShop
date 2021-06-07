@@ -49,11 +49,11 @@ namespace API.Services
             }
         }
 
-        public bool UpdateUserInfo(int userId, UserInfo userInfo)
+        public bool UpdateUserInfo(int userId, string firstName, string lastName, string address, string username, string password, string email)
         {
             try
             {
-                return _repository.UpdateUserInfo(userId, userInfo);
+                return _repository.UpdateUserInfo(userId, firstName, lastName, address, username, password, email);
             }
             catch (UserServiceException exc)
             {

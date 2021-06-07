@@ -110,14 +110,17 @@ namespace DataLayer.Repository
                     connection.Open();
                     var parameters = new
                     {
-                        product.Id,
-                        product.title,
-                        product.description,
-                        Q_Type = product.the_type
+                        productId = product.Id,
+                        title = product.title,
+                        description = product.description,
+                        p_type = product.the_type,
+                        price,
+                        quantity = qty,
+                        product_date = priceDate
                     };
 
                     var procedure = "update_product";
-                    connection.Execute(procedure, parameters);
+                    connection.Execute(procedure, parameters, commandType: CommandType.StoredProcedure);
 
                     return true;
                 }

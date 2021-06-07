@@ -36,9 +36,9 @@ namespace API.Controllers
         }
 
         [HttpPut]
-        public bool UpdateUserInfo(int userId, UserInfo userInfo)
+        public bool UpdateUserInfo(int userId, string firstName, string lastName, string address, string username, string password, string email)
         {
-            return _userService.UpdateUserInfo(userId, userInfo);
+            return _userService.UpdateUserInfo(userId, firstName, lastName, address, username, password, email);
         }
         [HttpDelete]
         [Route("{id}")]

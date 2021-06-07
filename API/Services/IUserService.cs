@@ -7,7 +7,7 @@ namespace API.Services
         public object GetSafuUserInfoById(int id);
         public UserInfo GetUserInfoById(int id);
         public bool AddUser(string firstName, string lastName, string address, string username, string password, string email, string role);
-        public bool UpdateUserInfo(int userId, UserInfo userInfo);
+        public bool UpdateUserInfo(int userId, string firstName, string lastName, string address, string username, string password, string email);
         public bool DeleteUserById(int id);
     }
 }

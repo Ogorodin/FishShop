@@ -82,7 +82,6 @@ namespace DataLayer.Repository
                         email,
                         role
                     };
-                    var result = connection.Execute(procedure, parameters, commandType: CommandType.StoredProcedure);
                     connection.Execute(procedure, parameters, commandType: CommandType.StoredProcedure);
 
                     return true;
@@ -95,21 +94,23 @@ namespace DataLayer.Repository
             }
         }
 
-        public bool UpdateUserInfo(int userId, UserInfo userInfo)
+        public bool UpdateUserInfo(int userId, string firstName, string lastName, string address, string username, string password, string email)
         {
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
-
                     connection.Open();
                     var procedure = "update_user_info_by_user_id";
                     var parameters = new
                     {
                         userId,
-                        userInfo.FirstName,
-                        userInfo.LastName,
-                        userInfo.Address
+                        firstName,
+                        lastName,
+                        address,
+                        username,
+                        password,
+                        email
                     };
                     connection.Execute(procedure, parameters, commandType: CommandType.StoredProcedure);
                     return true;
