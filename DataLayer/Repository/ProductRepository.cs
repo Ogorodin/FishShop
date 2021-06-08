@@ -5,7 +5,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace DataLayer.Repository
 {
@@ -13,7 +13,7 @@ namespace DataLayer.Repository
     {
         private readonly string _connectionString = "server=localhost;port=3306;database=the_fish_shop_db;uid=root;password=admin;";
 
-        public IEnumerable<Product> GetProducts()
+        public async Task<List<Product>> GetProductsAsync()
         {
             try
             {
@@ -21,7 +21,9 @@ namespace DataLayer.Repository
                 {
                     connection.Open();
                     var sql = "SELECT * FROM product";
-                    return connection.Query<Product>(sql);
+                    var result = await connection.QueryAsync<List<Product>>(sql);
+                    return (List<Product>)result; ///////////// ?????????????????
+
                 }
             }
             catch (Exception exc)
@@ -31,7 +33,7 @@ namespace DataLayer.Repository
             }
         }
 
-        public IEnumerable<object> GetProductsWithStockData()
+        public async Task<List<object>> GetProductsWithStockDataAsync()
         {
             try
             {
@@ -39,7 +41,8 @@ namespace DataLayer.Repository
                 {
                     connection.Open();
                     var procedure = "get_products_with_stock_data";
-                    return connection.Query<object>(procedure, commandType: CommandType.StoredProcedure);
+                    var result = await connection.QueryAsync<List<object>>(procedure, commandType: CommandType.StoredProcedure);
+                    return (List<object>)result;
                 }
             }
             catch (Exception exc)
@@ -49,7 +52,7 @@ namespace DataLayer.Repository
             }
         }
 
-        public object GetProductById(int id)
+        public async Task<object> GetProductByIdAsync(int id)
         {
             try
             {
@@ -62,7 +65,7 @@ namespace DataLayer.Repository
                         Id = id
                     };
 
-                    var result = connection.QueryFirstOrDefault<Product>(procedure, parameters, commandType: CommandType.StoredProcedure);
+                    var result = await connection.QueryFirstOrDefaultAsync<Product>(procedure, parameters, commandType: CommandType.StoredProcedure);
                     return result;
                 }
             }
@@ -72,13 +75,12 @@ namespace DataLayer.Repository
             }
         }
 
-        public bool AddProduct(Product product, double price, int quantity, DateTime priceDate)
+        public async Task<bool> AddProductAsync(Product product, double price, int quantity, DateTime priceDate)
         {
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
-
                     connection.Open();
                     var procedure = "insert_product_with_stock_data";
                     var parameters = new
@@ -90,7 +92,7 @@ namespace DataLayer.Repository
                         quantity,
                         price_date = priceDate
                     };
-                    connection.Execute(procedure, parameters, commandType: CommandType.StoredProcedure);
+                    await connection.ExecuteAsync(procedure, parameters, commandType: CommandType.StoredProcedure);
                     return true;
                 }
             }
@@ -100,13 +102,12 @@ namespace DataLayer.Repository
             }
         }
 
-        public bool UpdateProduct(Product product, double price, int qty, DateTime priceDate)
+        public async Task<bool> UpdateProductAsync(Product product, double price, int qty, DateTime priceDate)
         {
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
-
                     connection.Open();
                     var parameters = new
                     {
@@ -120,7 +121,7 @@ namespace DataLayer.Repository
                     };
 
                     var procedure = "update_product";
-                    connection.Execute(procedure, parameters, commandType: CommandType.StoredProcedure);
+                    await connection.ExecuteAsync(procedure, parameters, commandType: CommandType.StoredProcedure);
 
                     return true;
                 }
@@ -131,7 +132,7 @@ namespace DataLayer.Repository
             }
         }
 
-        public bool DeleteProductById(int id)
+        public async Task<bool> DeleteProductByIdAsync(int id)
         {
             try
             {
@@ -145,7 +146,7 @@ namespace DataLayer.Repository
                         Id = id
                     };
 
-                    connection.Execute(procedure, parameters, commandType: CommandType.StoredProcedure);
+                    await connection.ExecuteAsync(procedure, parameters, commandType: CommandType.StoredProcedure);
                     return true;
                 }
             }

@@ -5,6 +5,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DataLayer.Repository
 {
@@ -12,7 +13,7 @@ namespace DataLayer.Repository
     {
         private readonly string _connectionString = "server=localhost;port=3306;database=the_fish_shop_db;uid=root;password=admin;";
 
-        public object GetSafuUserInfoById(int id)
+        public async Task<object> GetSafuUserInfoByIdAsync(int id)
         {
             try
             {
@@ -22,8 +23,8 @@ namespace DataLayer.Repository
                     connection.Open();
                     var storedProcedure = "get_user_data_safe";
                     var parameters = new { id };
-                    var results = connection.Query<object>(storedProcedure, parameters, commandType: CommandType.StoredProcedure).AsList();
-                    if (results.Count == 0)
+                    var results = await connection.QueryAsync<object>(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
+                    if (results.First() == null)
                     {
                         return null;
                     }
@@ -37,18 +38,17 @@ namespace DataLayer.Repository
             }
         }
 
-        public UserInfo GetUserInfoById(int id)
+        public async Task<UserInfo> GetUserInfoByIdAsync(int id)
         {
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
-
                     connection.Open();
                     var parameters = new { id };
                     var procedure = "get_user_info_by_user_id";
-                    var result = connection.Query<UserInfo>(procedure, parameters, commandType: CommandType.StoredProcedure).ToList();
-                    if (result == null || result.Count == 0)
+                    var result = await connection.QueryAsync<UserInfo>(procedure, parameters, commandType: CommandType.StoredProcedure);
+                    if (result == null || result.First() == null)
                     {
                         return null;
                     }
@@ -63,13 +63,12 @@ namespace DataLayer.Repository
         }
 
 
-        public bool AddUser(string firstName, string lastName, string address, string username, string password, string email, string role)
+        public async Task<bool> AddUserAsync(string firstName, string lastName, string address, string username, string password, string email, string role)
         {
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
-
                     connection.Open();
                     var procedure = "insert_user_with_details";
                     var parameters = new
@@ -82,7 +81,7 @@ namespace DataLayer.Repository
                         email,
                         role
                     };
-                    connection.Execute(procedure, parameters, commandType: CommandType.StoredProcedure);
+                    await connection.ExecuteAsync(procedure, parameters, commandType: CommandType.StoredProcedure);
 
                     return true;
                 }
@@ -94,7 +93,7 @@ namespace DataLayer.Repository
             }
         }
 
-        public bool UpdateUserInfo(int userId, string firstName, string lastName, string address, string username, string password, string email)
+        public async Task<bool> UpdateUserInfoAsync(int userId, string firstName, string lastName, string address, string username, string password, string email)
         {
             try
             {
@@ -112,7 +111,7 @@ namespace DataLayer.Repository
                         password,
                         email
                     };
-                    connection.Execute(procedure, parameters, commandType: CommandType.StoredProcedure);
+                    await connection.ExecuteAsync(procedure, parameters, commandType: CommandType.StoredProcedure);
                     return true;
                 }
             }
@@ -123,17 +122,16 @@ namespace DataLayer.Repository
             }
         }
 
-        public bool DeleteUserById(int id)
+        public async Task<bool> DeleteUserByIdAsync(int id)
         {
             try
             {
                 using (MySqlConnection connection = new MySqlConnection(_connectionString))
                 {
-
                     connection.Open();
                     var procedure = "delete_user_by_id";
                     var parameters = new { id };
-                    connection.Execute(procedure, parameters, commandType: CommandType.StoredProcedure);
+                    await connection.ExecuteAsync(procedure, parameters, commandType: CommandType.StoredProcedure);
                     return true;
                 }
             }

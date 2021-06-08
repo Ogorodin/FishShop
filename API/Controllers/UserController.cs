@@ -1,7 +1,7 @@
 ﻿using API.Services;
 using DataLayer.Entity;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace API.Controllers
 {
@@ -17,34 +17,40 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public object GetSafuUserInfoById(int id)
+        public async Task<object> GetSafuUserInfoByIdAsync(int id)
         {
-            return _userService.GetSafuUserInfoById(id);
+            var result = await _userService.GetSafuUserInfoByIdAsync(id);
+            if (result != null)
+            {
+                return result;
+            }
+            return _userService.GetSafuUserInfoByIdAsync(id);
         }
 
         [HttpGet]
         [Route("info/{id}")]
-        public UserInfo GetUserInfoById(int id)
+        public async Task<UserInfo> GetUserInfoByIdAsync(int id)
         {
-            return _userService.GetUserInfoById(id);
+            return await _userService.GetUserInfoByIdAsync(id);
         }
 
         [HttpPost]
-        public bool AddUser(string firstName, string lastName, string address, string username, string password, string email, string role)
+        public async Task<bool> AddUserAsync(string firstName, string lastName, string address, string username, string password, string email, string role)
         {
-            return _userService.AddUser(firstName, lastName, address, username, password, email, role);
+            return await _userService.AddUserAsync(firstName, lastName, address, username, password, email, role);
         }
 
         [HttpPut]
-        public bool UpdateUserInfo(int userId, string firstName, string lastName, string address, string username, string password, string email)
+        public async Task<bool> UpdateUserInfoAsync(int userId, string firstName, string lastName, string address, string username, string password, string email)
         {
-            return _userService.UpdateUserInfo(userId, firstName, lastName, address, username, password, email);
+            return await _userService.UpdateUserInfoAsync(userId, firstName, lastName, address, username, password, email);
         }
+
         [HttpDelete]
         [Route("{id}")]
-        public bool DeleteUserById(int id)
+        public async Task<bool> DeleteUserByIdAsync(int id)
         {
-            return _userService.DeleteUserById(id);
+            return await _userService.DeleteUserByIdAsync(id);
         }
     }
 }

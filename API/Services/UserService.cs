@@ -1,6 +1,7 @@
 ﻿using DataLayer.Entity;
 using DataLayer.Repository;
 using Domain.Exceptions;
+using System.Threading.Tasks;
 
 namespace API.Services
 {
@@ -13,11 +14,11 @@ namespace API.Services
             _repository = repository;
         }
 
-        public object GetSafuUserInfoById(int id)
+        public async Task<object> GetSafuUserInfoByIdAsync(int id)
         {
             try
             {
-                return _repository.GetSafuUserInfoById(id);
+                return await _repository.GetSafuUserInfoByIdAsync(id);
             }
             catch (UserServiceException exc)
             {
@@ -25,11 +26,11 @@ namespace API.Services
             }
         }
 
-        public UserInfo GetUserInfoById(int id)
+        public async Task<UserInfo> GetUserInfoByIdAsync(int id)
         {
             try
             {
-                return _repository.GetUserInfoById(id);
+                return await _repository.GetUserInfoByIdAsync(id);
             }
             catch (UserServiceException exc)
             {
@@ -37,11 +38,11 @@ namespace API.Services
             }
         }
 
-        public bool AddUser(string firstName, string lastName, string address, string username, string password, string email, string role)
+        public async Task<bool> AddUserAsync(string firstName, string lastName, string address, string username, string password, string email, string role)
         {
             try
             {
-                return _repository.AddUser(firstName, lastName, address, username, password, email, role);
+                return await _repository.AddUserAsync(firstName, lastName, address, username, password, email, role);
             }
             catch (UserServiceException exc)
             {
@@ -49,11 +50,11 @@ namespace API.Services
             }
         }
 
-        public bool UpdateUserInfo(int userId, string firstName, string lastName, string address, string username, string password, string email)
+        public async Task<bool> UpdateUserInfoAsync(int userId, string firstName, string lastName, string address, string username, string password, string email)
         {
             try
             {
-                return _repository.UpdateUserInfo(userId, firstName, lastName, address, username, password, email);
+                return await _repository.UpdateUserInfoAsync(userId, firstName, lastName, address, username, password, email);
             }
             catch (UserServiceException exc)
             {
@@ -61,11 +62,11 @@ namespace API.Services
             }
         }
 
-        public bool DeleteUserById(int id)
+        public async Task<bool> DeleteUserByIdAsync(int id)
         {
             try
             {
-                return _repository.DeleteUserById(id);
+                return await _repository.DeleteUserByIdAsync(id);
             }
             catch (UserServiceException exc)
             {

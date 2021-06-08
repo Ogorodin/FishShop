@@ -1,14 +1,15 @@
 ﻿using DataLayer.Entity;
+using System.Threading.Tasks;
 
 namespace DataLayer.Repository
 {
     public interface IUserRepository
     {
-        public object GetSafuUserInfoById(int id);
-        public UserInfo GetUserInfoById(int id);
-        public bool AddUser(string firstName, string lastName, string address, string username, string password, string email, string role);
-        public bool UpdateUserInfo(int userId, string firstName, string lastName, string address, string username, string password, string email);
-        public bool DeleteUserById(int id);
+        public Task<object> GetSafuUserInfoByIdAsync(int id);
+        public Task<UserInfo> GetUserInfoByIdAsync(int id);
+        public Task<bool> AddUserAsync(string firstName, string lastName, string address, string username, string password, string email, string role);
+        public Task<bool> UpdateUserInfoAsync(int userId, string firstName, string lastName, string address, string username, string password, string email);
+        public Task<bool> DeleteUserByIdAsync(int id);
 
     }
 }

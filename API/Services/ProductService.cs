@@ -3,6 +3,7 @@ using DataLayer.Repository;
 using Domain.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace API.Services
 {
@@ -14,7 +15,7 @@ namespace API.Services
         {
             _productRepository = repository;
         }
-        public IEnumerable<Product> GetProducts()
+        public async Task<List<Product>> GetProductsAsync()
         {
             try
             {
@@ -24,10 +25,10 @@ namespace API.Services
             {
                 throw new ProductServiceException("Exception caught in API.Services.ProductService.GetProducts", exc);
             }
-            return _productRepository.GetProducts();
+            return await _productRepository.GetProductsAsync();
         }
 
-        public IEnumerable<object> GetProductsWithStockData()
+        public async Task<IEnumerable<object>> GetProductsWithStockDataAsync()
         {
             try
             {
@@ -37,10 +38,10 @@ namespace API.Services
             {
                 throw new ProductServiceException("Exception caught in API.Services.ProductService.GetProducts", exc);
             }
-            return _productRepository.GetProductsWithStockData();
+            return await _productRepository.GetProductsWithStockDataAsync();
         }
 
-        public object GetProductById(int id)
+        public async Task<object> GetProductByIdAsync(int id)
         {
             try
             {
@@ -50,15 +51,15 @@ namespace API.Services
             {
                 throw new ProductServiceException("Exception caught in API.Services.ProductService.GetProductById", exc);
             }
-            return _productRepository.GetProductById(id);
+            return await _productRepository.GetProductByIdAsync(id);
         }
 
-        public bool AddProduct(Product product, double price, int qty, DateTime priceDate)
+        public async Task<bool> AddProductAsync(Product product, double price, int qty, DateTime priceDate)
         {
             try
             {
                 // IMAGIONARY IMPLEMENTATION THAT CAN CAUSE A PROBLEM...
-                _productRepository.AddProduct(product, price, qty, priceDate);
+                await _productRepository.AddProductAsync(product, price, qty, priceDate);
                 return true;
             }
             catch (ProductServiceException exc)
@@ -67,12 +68,12 @@ namespace API.Services
             }
         }
 
-        public bool UpdateProduct(Product product, double price, int qty, DateTime priceDate)
+        public async Task<bool> UpdateProductAsync(Product product, double price, int qty, DateTime priceDate)
         {
             try
             {
                 // IMAGIONARY IMPLEMENTATION THAT CAN CAUSE A PROBLEM...
-                _productRepository.UpdateProduct(product, price, qty, priceDate);
+                await _productRepository.UpdateProductAsync(product, price, qty, priceDate);
                 return true;
             }
             catch (ProductServiceException exc)
@@ -80,12 +81,12 @@ namespace API.Services
                 throw new ProductServiceException("Exception caught in API.Services.ProductService.UpdateProduct", exc);
             }
         }
-        public bool DeleteProductById(int id)
+        public async Task<bool> DeleteProductByIdAsync(int id)
         {
             try
             {
                 // IMAGIONARY IMPLEMENTATION THAT CAN CAUSE A PROBLEM...
-                _productRepository.DeleteProductById(id);
+                await _productRepository.DeleteProductByIdAsync(id);
                 return true;
             }
             catch (ProductServiceException exc)
