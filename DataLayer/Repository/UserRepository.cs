@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using DataLayer.DAOs;
 using DataLayer.Entity;
 using Domain.Exceptions;
 using MySql.Data.MySqlClient;
@@ -11,9 +12,14 @@ namespace DataLayer.Repository
 {
     public class UserRepository : IUserRepository
     {
-        private readonly string _connectionString = "server=localhost;port=3306;database=the_fish_shop_db;uid=root;password=admin;";
+        private readonly string _connectionString;
 
-        public async Task<object> GetSafuUserInfoByIdAsync(int id)
+        public UserRepository(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
+
+        public async Task<UserDAO> GetSafuUserInfoByIdAsync(int id)
         {
             try
             {
@@ -23,18 +29,20 @@ namespace DataLayer.Repository
                     connection.Open();
                     var storedProcedure = "get_user_data_safe";
                     var parameters = new { id };
-                    var results = await connection.QueryAsync<object>(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
+                    var results = await connection.QueryAsync<UserDAO>(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
                     if (results.First() == null)
                     {
                         return null;
                     }
+
                     return results.First();
                 }
             }
             catch (Exception exc)
             {
                 // --- no user with requested ID found ----> redirect user
-                throw new DataLayerException("DataLayerException caught in DataLayer.Repository.UserRepository", exc);
+                return null;
+                //  throw new DataLayerException("DataLayerException caught in DataLayer.Repository.UserRepository", exc);
             }
         }
 
@@ -63,7 +71,7 @@ namespace DataLayer.Repository
         }
 
 
-        public async Task<bool> AddUserAsync(string firstName, string lastName, string address, string username, string password, string email, string role)
+        public async Task<bool> AddUserAsync(User user, UserInfo userInfo)
         {
             try
             {
@@ -73,13 +81,13 @@ namespace DataLayer.Repository
                     var procedure = "insert_user_with_details";
                     var parameters = new
                     {
-                        firstName,
-                        lastName,
-                        address,
-                        username,
-                        password,
-                        email,
-                        role
+                        userInfo.FirstName,
+                        userInfo.LastName,
+                        userInfo.Address,
+                        user.Username,
+                        user.Password,
+                        user.Email,
+                        user.Role
                     };
                     await connection.ExecuteAsync(procedure, parameters, commandType: CommandType.StoredProcedure);
 
@@ -93,7 +101,7 @@ namespace DataLayer.Repository
             }
         }
 
-        public async Task<bool> UpdateUserInfoAsync(int userId, string firstName, string lastName, string address, string username, string password, string email)
+        public async Task<bool> UpdateUserInfoAsync(User user, UserInfo userInfo)
         {
             try
             {
@@ -103,13 +111,13 @@ namespace DataLayer.Repository
                     var procedure = "update_user_info_by_user_id";
                     var parameters = new
                     {
-                        userId,
-                        firstName,
-                        lastName,
-                        address,
-                        username,
-                        password,
-                        email
+                        userInfo.FirstName,
+                        userInfo.LastName,
+                        userInfo.Address,
+                        user.Username,
+                        user.Password,
+                        user.Email,
+                        user.Role
                     };
                     await connection.ExecuteAsync(procedure, parameters, commandType: CommandType.StoredProcedure);
                     return true;

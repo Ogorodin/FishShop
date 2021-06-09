@@ -1,9 +1,7 @@
 ﻿namespace DataLayer.Entity
 {
-    public class UserInfo
+    public class UserInfo : BaseEntity
     {
-        public int Id { get; set; }
-
         public string FirstName { get; set; }
 
         public string LastName { get; set; }

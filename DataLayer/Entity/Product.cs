@@ -2,7 +2,7 @@
 
 namespace DataLayer.Entity
 {
-    public class Product
+    public class Product : BaseEntity
     {
         public enum EProductType
         {
@@ -18,8 +18,6 @@ namespace DataLayer.Entity
             FOOD,
             TANK
         }
-
-        public int Id { get; set; }
         public string title { get; set; }
         public string description { get; set; }
         public EProductType the_type { get; set; }

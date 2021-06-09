@@ -2,14 +2,13 @@
 
 namespace DataLayer.Entity
 {
-    public class User
+    public class User : BaseEntity
     {
         public enum ERole
         {
             ROLE_ADMIN, ROLE_CUSTOMER, ROLE_EMPLOYEE
         }
 
-        public int Id { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }

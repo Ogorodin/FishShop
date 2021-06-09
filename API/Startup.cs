@@ -24,7 +24,8 @@ namespace FishShop
             services.AddSingleton<IProductService, ProductService>();
             services.AddSingleton<IProductRepository, ProductRepository>();
             services.AddSingleton<IUserService, UserService>();
-            services.AddSingleton<IUserRepository, UserRepository>();
+            var url = Configuration.GetConnectionString("MySqlDb");
+            services.AddSingleton<IUserRepository>(new UserRepository(url));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

@@ -2,6 +2,7 @@
 using DataLayer.Entity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using DataLayer.DAOs;
 
 namespace API.Controllers
 {
@@ -17,14 +18,9 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<object> GetSafuUserInfoByIdAsync(int id)
+        public async Task<UserDAO> GetSafuUserInfoByIdAsync(int id)
         {
-            var result = await _userService.GetSafuUserInfoByIdAsync(id);
-            if (result != null)
-            {
-                return result;
-            }
-            return _userService.GetSafuUserInfoByIdAsync(id);
+            return await _userService.GetSafuUserInfoByIdAsync(id);
         }
 
         [HttpGet]
@@ -35,15 +31,44 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<bool> AddUserAsync(string firstName, string lastName, string address, string username, string password, string email, string role)
+        public async Task<bool> AddUserAsync([FromBody] UserDAOFull userDAO)
         {
-            return await _userService.AddUserAsync(firstName, lastName, address, username, password, email, role);
+            User user = new User
+            {
+                Username = userDAO.Username,
+                Password = userDAO.Password,
+                Role = userDAO.Role,
+                Email = userDAO.Email
+            };
+
+            UserInfo info = new UserInfo
+            {
+                FirstName = userDAO.FirstName,
+                LastName = userDAO.LastName,
+                Address = userDAO.Address
+            };
+
+            return await _userService.AddUserAsync(user, info);
         }
 
         [HttpPut]
-        public async Task<bool> UpdateUserInfoAsync(int userId, string firstName, string lastName, string address, string username, string password, string email)
+        public async Task<bool> UpdateUserInfoAsync([FromBody] UserDAOFull userDAO)
         {
-            return await _userService.UpdateUserInfoAsync(userId, firstName, lastName, address, username, password, email);
+            User user = new User
+            {
+                Username = userDAO.Username,
+                Password = userDAO.Password,
+                Role = userDAO.Role,
+                Email = userDAO.Email
+            };
+
+            UserInfo info = new UserInfo
+            {
+                FirstName = userDAO.FirstName,
+                LastName = userDAO.LastName,
+                Address = userDAO.Address
+            };
+            return await _userService.UpdateUserInfoAsync(user, info);
         }
 
         [HttpDelete]

@@ -1,5 +1,6 @@
 ﻿using DataLayer.Entity;
 using DataLayer.Repository;
+using DataLayer.DAOs;
 using Domain.Exceptions;
 using System.Threading.Tasks;
 
@@ -14,7 +15,7 @@ namespace API.Services
             _repository = repository;
         }
 
-        public async Task<object> GetSafuUserInfoByIdAsync(int id)
+        public async Task<UserDAO> GetSafuUserInfoByIdAsync(int id)
         {
             try
             {
@@ -38,11 +39,11 @@ namespace API.Services
             }
         }
 
-        public async Task<bool> AddUserAsync(string firstName, string lastName, string address, string username, string password, string email, string role)
+        public async Task<bool> AddUserAsync(User user, UserInfo userInfo)
         {
             try
             {
-                return await _repository.AddUserAsync(firstName, lastName, address, username, password, email, role);
+                return await _repository.AddUserAsync(user, userInfo);
             }
             catch (UserServiceException exc)
             {
@@ -50,11 +51,11 @@ namespace API.Services
             }
         }
 
-        public async Task<bool> UpdateUserInfoAsync(int userId, string firstName, string lastName, string address, string username, string password, string email)
+        public async Task<bool> UpdateUserInfoAsync(User user, UserInfo userInfo)
         {
             try
             {
-                return await _repository.UpdateUserInfoAsync(userId, firstName, lastName, address, username, password, email);
+                return await _repository.UpdateUserInfoAsync(user, userInfo);
             }
             catch (UserServiceException exc)
             {
