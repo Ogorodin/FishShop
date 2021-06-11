@@ -1,4 +1,5 @@
-﻿using DataLayer.Entity;
+﻿using DataLayer.DAOs;
+using DataLayer.Entity;
 using DataLayer.Repository;
 using Domain.Exceptions;
 using System;
@@ -15,20 +16,8 @@ namespace API.Services
         {
             _productRepository = repository;
         }
-        public async Task<List<Product>> GetProductsAsync()
-        {
-            try
-            {
-                // IMAGIONARY IMPLEMENTATION THAT CAN CAUSE A PROBLEM...
-            }
-            catch (ProductServiceException exc)
-            {
-                throw new ProductServiceException("Exception caught in API.Services.ProductService.GetProducts", exc);
-            }
-            return await _productRepository.GetProductsAsync();
-        }
 
-        public async Task<IEnumerable<object>> GetProductsWithStockDataAsync()
+        public async Task<IEnumerable<ProductStockDAO>> GetProductsWithStockDataAsync()
         {
             try
             {
@@ -41,7 +30,7 @@ namespace API.Services
             return await _productRepository.GetProductsWithStockDataAsync();
         }
 
-        public async Task<object> GetProductByIdAsync(int id)
+        public async Task<ProductStockDAO> GetProductByIdAsync(int id)
         {
             try
             {
@@ -54,12 +43,12 @@ namespace API.Services
             return await _productRepository.GetProductByIdAsync(id);
         }
 
-        public async Task<bool> AddProductAsync(Product product, double price, int qty, DateTime priceDate)
+        public async Task<bool> AddProductAsync(Product product, Stock stock)
         {
             try
             {
                 // IMAGIONARY IMPLEMENTATION THAT CAN CAUSE A PROBLEM...
-                await _productRepository.AddProductAsync(product, price, qty, priceDate);
+                await _productRepository.AddProductAsync(product, stock);
                 return true;
             }
             catch (ProductServiceException exc)
@@ -68,12 +57,12 @@ namespace API.Services
             }
         }
 
-        public async Task<bool> UpdateProductAsync(Product product, double price, int qty, DateTime priceDate)
+        public async Task<bool> UpdateProductAsync(Product product, Stock stock)
         {
             try
             {
                 // IMAGIONARY IMPLEMENTATION THAT CAN CAUSE A PROBLEM...
-                await _productRepository.UpdateProductAsync(product, price, qty, priceDate);
+                await _productRepository.UpdateProductAsync(product, stock);
                 return true;
             }
             catch (ProductServiceException exc)

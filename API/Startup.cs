@@ -22,10 +22,10 @@ namespace FishShop
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IProductService, ProductService>();
-            services.AddSingleton<IProductRepository, ProductRepository>();
             services.AddSingleton<IUserService, UserService>();
             var url = Configuration.GetConnectionString("MySqlDb");
             services.AddSingleton<IUserRepository>(new UserRepository(url));
+            services.AddSingleton<IProductRepository>(new ProductRepository(url));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

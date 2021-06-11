@@ -8,7 +8,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("user")]
-    public class UserController
+    public class UserController : Controller
     {
         private IUserService _userService;
         public UserController(IUserService service)
@@ -18,20 +18,36 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<UserDAO> GetSafuUserInfoByIdAsync(int id)
+        public async Task<IActionResult> GetSafuUserInfoByIdAsync(int id)
         {
-            return await _userService.GetSafuUserInfoByIdAsync(id);
+            var result = await _userService.GetSafuUserInfoByIdAsync(id);
+            if (result != null)
+            {
+                return StatusCode(200, result);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [HttpGet]
         [Route("info/{id}")]
-        public async Task<UserInfo> GetUserInfoByIdAsync(int id)
+        public async Task<IActionResult> GetUserInfoByIdAsync(int id)
         {
-            return await _userService.GetUserInfoByIdAsync(id);
+            var result = await _userService.GetUserInfoByIdAsync(id);
+            if (result != null)
+            {
+                return StatusCode(200, result);
+            }
+            else
+            {
+                return StatusCode(400);
+            }
         }
 
         [HttpPost]
-        public async Task<bool> AddUserAsync([FromBody] UserDAOFull userDAO)
+        public async Task<IActionResult> AddUserAsync([FromBody] UserDAOFull userDAO)
         {
             User user = new User
             {
@@ -48,14 +64,19 @@ namespace API.Controllers
                 Address = userDAO.Address
             };
 
-            return await _userService.AddUserAsync(user, info);
+            if (await _userService.AddUserAsync(user, info))
+            {
+                return Ok();
+            }
+            else return StatusCode(500);
         }
 
         [HttpPut]
-        public async Task<bool> UpdateUserInfoAsync([FromBody] UserDAOFull userDAO)
+        public async Task<IActionResult> UpdateUserInfoAsync([FromBody] UserDAOFull userDAO)
         {
             User user = new User
             {
+                Id = userDAO.Id,
                 Username = userDAO.Username,
                 Password = userDAO.Password,
                 Role = userDAO.Role,
@@ -68,14 +89,23 @@ namespace API.Controllers
                 LastName = userDAO.LastName,
                 Address = userDAO.Address
             };
-            return await _userService.UpdateUserInfoAsync(user, info);
+
+            if (await _userService.UpdateUserInfoAsync(user, info))
+            {
+                return Ok();
+            }
+            else return StatusCode(404);
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public async Task<bool> DeleteUserByIdAsync(int id)
+        public async Task<IActionResult> DeleteUserByIdAsync(int id)
         {
-            return await _userService.DeleteUserByIdAsync(id);
+            if (await _userService.DeleteUserByIdAsync(id))
+            {
+                return Ok();
+            }
+            else return StatusCode(404);
         }
     }
 }

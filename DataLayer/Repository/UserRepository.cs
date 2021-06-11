@@ -41,8 +41,8 @@ namespace DataLayer.Repository
             catch (Exception exc)
             {
                 // --- no user with requested ID found ----> redirect user
-                return null;
-                //  throw new DataLayerException("DataLayerException caught in DataLayer.Repository.UserRepository", exc);
+                // return null;
+                throw new DataLayerException("DataLayerException caught in DataLayer.Repository.UserRepository", exc);
             }
         }
 
@@ -66,6 +66,7 @@ namespace DataLayer.Repository
             catch (Exception exc)
             {
                 // --- no user with requested ID found ----> redirect user
+                //return null;
                 throw new DataLayerException("DataLayerException caught in DataLayer.Repository.UserRepository", exc);
             }
         }
@@ -111,6 +112,7 @@ namespace DataLayer.Repository
                     var procedure = "update_user_info_by_user_id";
                     var parameters = new
                     {
+                        user.Id,
                         userInfo.FirstName,
                         userInfo.LastName,
                         userInfo.Address,
@@ -126,6 +128,7 @@ namespace DataLayer.Repository
             catch (Exception exc)
             {
                 // --- no user with requested ID found ----> redirect user
+                // return false;
                 throw new DataLayerException("DataLayerException caught in DataLayer.Repository.UserRepository", exc);
             }
         }
@@ -146,6 +149,7 @@ namespace DataLayer.Repository
             catch (Exception exc)
             {
                 // --- no user with requested ID found ----> redirect user
+                //return false;
                 throw new DataLayerException("DataLayerException caught in DataLayer.Repository.UserRepository", exc);
             }
         }
