@@ -26,6 +26,7 @@ namespace FishShop
             var url = Configuration.GetConnectionString("MySqlDb");
             services.AddSingleton<IUserRepository>(new UserRepository(url));
             services.AddSingleton<IProductRepository>(new ProductRepository(url));
+            services.AddSingleton<IMailService, MailService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
